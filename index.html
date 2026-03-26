@@ -6,33 +6,293 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Telegram-бот для автоматизации учета производства</title>
 <style>
-:root{--bg:#efe5d8;--paper:rgba(255,250,245,.94);--paper-strong:rgba(255,252,248,.98);--line:rgba(88,62,42,.14);--text:#17120f;--muted:#43352c;--accent:#7d8791;--accent-strong:#4e5862;--soft:#c8d0d8;--soft-rose:#cfd5db;--soft-sage:#d8dde2;--soft-sand:#e3e7eb;--shadow:0 24px 60px rgba(82,56,35,.14);--shadow-soft:0 14px 34px rgba(82,56,35,.10);--radius:26px;--radius-md:20px;--content:min(1320px,calc(100% - 32px));--display:'Georgia','Times New Roman',serif;--body:'Segoe UI','Tahoma',sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;color:var(--text);font-family:var(--body);background:radial-gradient(circle at top left,rgba(200,208,216,.52),transparent 24rem),radial-gradient(circle at 100% 18%,rgba(125,135,145,.16),transparent 28rem),linear-gradient(180deg,#f6f8fa 0%,#e6ebf0 50%,#d8dee5 100%)}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(46,32,22,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(46,32,22,.03) 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(180deg,rgba(0,0,0,.56),transparent 92%)}
-a{color:inherit}img{display:block;max-width:100%}button{font:inherit}.topbar{position:sticky;top:12px;z-index:40;width:var(--content);margin:16px auto 0;display:grid;grid-template-columns:minmax(320px,1fr) minmax(640px,2fr);align-items:center;gap:20px;padding:16px 20px;border:1px solid rgba(255,255,255,.75);border-radius:32px;background:rgba(255,250,242,.82);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
-.brand{display:grid;grid-template-columns:144px 14px minmax(0,1fr);align-items:center;gap:18px;text-decoration:none;font:800 .84rem/1.22 var(--body);letter-spacing:.05em;text-transform:uppercase;max-width:100%}.brand-mark{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--soft),var(--accent));box-shadow:0 0 0 8px rgba(179,90,51,.12)}.brand-image{width:144px;height:144px;object-fit:cover;border-radius:22px;border:1px solid rgba(88,62,42,.12);box-shadow:0 18px 34px rgba(60,68,78,.20);background:linear-gradient(180deg,#eef2f5,#dbe2e8)}.brand span:last-child{display:block;max-width:26ch;white-space:normal;overflow-wrap:break-word;word-break:normal;text-wrap:pretty}
-.nav{display:grid;grid-template-columns:repeat(5,minmax(96px,1fr));gap:10px 12px;align-items:stretch;max-width:none;width:100%;margin-left:0;justify-self:stretch}.nav a{display:flex;align-items:center;justify-content:center;min-height:34px;padding:7px 10px;text-align:center;text-decoration:none;color:var(--muted);font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:.69rem;line-height:1.18;position:relative;white-space:normal;border:1px solid rgba(88,62,42,.10);border-radius:12px;background:rgba(255,255,255,.34)}.nav a::after{content:'';position:absolute;left:12px;right:12px;bottom:6px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:center;transition:transform .18s ease}.nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
-.wrap{width:var(--content);margin:0 auto;padding:20px 0 40px}main{display:grid;gap:24px}section{position:relative;overflow:hidden;padding:34px;border:1px solid rgba(255,255,255,.78);border-radius:var(--radius);background:var(--paper);box-shadow:var(--shadow)}section::before{content:'';position:absolute;inset:auto auto 0 0;width:180px;height:180px;background:radial-gradient(circle,rgba(239,201,150,.20),transparent 68%);pointer-events:none}
-.hero{padding:46px;display:grid;gap:20px;background:linear-gradient(135deg,rgba(250,252,253,.98),rgba(229,235,241,.95));isolation:isolate;justify-items:center;text-align:center}.hero::after{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(190,198,206,.38),transparent 70%);pointer-events:none}.hero-kicker{display:inline-flex;align-items:center;gap:10px;color:var(--accent-strong);font-weight:900;letter-spacing:.16em;text-transform:uppercase;font-size:.78rem}.hero-kicker::before{display:none}.hero h1{margin:0;font:800 clamp(2.2rem,4vw,4.3rem)/1.02 var(--display);max-width:20ch;width:100%;letter-spacing:.01em;text-wrap:balance;text-align:center}.hero p{margin:0;max-width:72rem;width:100%;color:var(--text);font-size:1.12rem;line-height:1.75}.hero-lead{font:800 clamp(1.95rem,3.2vw,3rem)/1.08 var(--display)!important;max-width:24ch;text-wrap:balance;text-align:center}
-.content-section{display:grid;gap:22px}.section-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}.section-kicker{display:inline-flex;align-items:center;justify-content:center;min-width:48px;height:48px;padding:0 14px;border-radius:999px;background:linear-gradient(135deg,rgba(125,135,145,.18),rgba(211,218,224,.55));color:var(--accent-strong);font-weight:900;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}.section-head h2{margin:0;font:800 clamp(1.6rem,2.5vw,2.3rem)/1.08 var(--display);letter-spacing:.01em;text-wrap:balance}.content-section>p{margin:0;color:var(--text);line-height:1.78;font-size:1.03rem}
-.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}.detail-card{padding:24px;border:1px solid var(--line);border-radius:var(--radius-md);background:linear-gradient(180deg,var(--paper-strong),rgba(242,246,249,.96));display:grid;gap:14px;align-content:start;height:100%;min-height:100%;box-shadow:var(--shadow-soft);transition:transform .18s ease,box-shadow .18s ease}.detail-card:hover{transform:translateY(-2px);box-shadow:0 20px 40px rgba(82,56,35,.12)}.detail-card:nth-child(3n+1){background:linear-gradient(180deg,rgba(255,252,250,.98),rgba(221,227,233,.55))}.detail-card:nth-child(3n+2){background:linear-gradient(180deg,rgba(255,252,250,.98),rgba(210,217,224,.48))}.detail-card:nth-child(3n){background:linear-gradient(180deg,rgba(255,252,250,.98),rgba(198,206,214,.42))}.detail-card h3,.detail-card h4{margin:0;line-height:1.18;text-wrap:balance}.detail-card h3{font:800 1.22rem/1.18 var(--display);letter-spacing:.01em}.detail-card h4{font:800 .98rem/1.22 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strong)}.detail-card p{margin:0;color:var(--text);line-height:1.74}.detail-card ul{margin:0;padding-left:18px;color:var(--text);display:grid;gap:10px}.detail-card li{line-height:1.68}.detail-card--wide{grid-column:1 / -1;min-height:0;height:auto}.detail-card--title{background:linear-gradient(135deg,rgba(125,135,145,.12),rgba(213,219,225,.34));border-color:rgba(179,90,51,.18)}.detail-card--title h3{font-size:1.32rem}.content-section>ul{margin:0;padding-left:20px;color:var(--text);display:grid;gap:10px}.content-section>ul li{line-height:1.65}
-.gallery-block{display:grid;gap:18px;background:linear-gradient(180deg,rgba(250,252,253,.96),rgba(233,238,243,.93))}.gallery-head{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap}.gallery-head h2{margin:0;font:800 clamp(1.6rem,2.4vw,2.3rem)/1.08 var(--display)}.gallery-head p{margin:0;color:var(--text);max-width:58rem;line-height:1.72}.gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}.gallery-card{border:1px solid var(--line);border-radius:22px;padding:0;background:linear-gradient(180deg,rgba(252,253,254,.98),rgba(233,238,243,.96));box-shadow:var(--shadow-soft);overflow:hidden;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;text-align:left}.gallery-card:hover{transform:translateY(-4px);box-shadow:0 22px 40px rgba(63,46,32,.14)}.gallery-image{aspect-ratio:16/10;width:100%;object-fit:cover;background:#efe5d6}.gallery-label{display:block;padding:14px 15px;color:var(--text);font-weight:800;line-height:1.48;letter-spacing:.02em}
-.lightbox{position:fixed;inset:0;display:none;place-items:center;padding:24px;background:rgba(19,15,12,.78);backdrop-filter:blur(8px);z-index:100}.lightbox.is-open{display:grid}.lightbox-frame{position:relative;width:min(92vw,1500px);max-height:88vh;display:grid;gap:14px}.lightbox-image{max-width:100%;max-height:78vh;width:auto;height:auto;margin:0 auto;border-radius:20px;box-shadow:0 24px 50px rgba(0,0,0,.35)}.lightbox-meta{display:flex;justify-content:center;color:#f5efe6;font-weight:700;letter-spacing:.04em}.lightbox-close,.lightbox-control{position:absolute;border:0;border-radius:999px;background:rgba(255,250,242,.92);color:#241a13;width:48px;height:48px;display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.22)}.lightbox-close{top:8px;right:8px;font-size:1.4rem}.lightbox-control{top:50%;transform:translateY(-50%);font-size:1.8rem}.lightbox-control.prev{left:8px}.lightbox-control.next{right:8px}
-@media (max-width:1100px){.detail-grid,.gallery-grid{grid-template-columns:1fr 1fr}}
-@media (max-width:820px){.topbar{grid-template-columns:1fr;border-radius:28px}.brand{grid-template-columns:96px 14px minmax(0,1fr)}.brand-image{width:96px;height:96px}.nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:none;justify-self:stretch;margin-left:0}.detail-grid,.gallery-grid{grid-template-columns:1fr}section{padding:24px}.hero{padding:30px}.hero h1{max-width:none}.lightbox-control{width:44px;height:44px}}
-@media (max-width:560px){.nav{grid-template-columns:1fr;margin-left:0;width:100%}.brand{grid-template-columns:1fr;justify-items:start}.brand-mark{display:none}.brand-image{width:108px;height:108px}.wrap{width:min(100% - 18px,1320px)}.topbar{width:min(100% - 18px,1320px);padding:14px 16px}.hero p,.detail-card p,.detail-card li,.gallery-head p{font-size:.98rem}}
-@media (max-width:820px){.topbar{position:static!important;top:auto!important;grid-template-columns:1fr!important;gap:12px!important;padding:12px 14px!important;border-radius:24px!important}.brand{grid-template-columns:72px 12px minmax(0,1fr)!important;gap:12px!important;font:800 .74rem/1.14 var(--body)!important;letter-spacing:.03em!important}.brand-image{width:72px!important;height:72px!important;border-radius:16px!important}.brand span:last-child{max-width:none!important}.nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important;max-width:none!important;justify-self:stretch!important}.nav a{min-height:30px!important;padding:6px 8px!important;font-size:.62rem!important;line-height:1.1!important;border-radius:10px!important}.hero{padding:24px!important;gap:14px!important}.hero-lead{font:800 clamp(1.55rem,5.8vw,2.15rem)/1.12 var(--display)!important;max-width:18ch!important}.detail-grid,.gallery-grid{grid-template-columns:1fr!important}section{padding:22px!important}}@media (max-width:560px){.topbar{position:static!important;padding:10px 12px!important;margin-top:10px!important}.brand{grid-template-columns:56px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;font:800 .68rem/1.1 var(--body)!important}.brand-mark{display:none!important}.brand-image{width:56px!important;height:56px!important}.brand span:last-child{grid-column:auto!important;grid-row:auto!important;max-width:none!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important;line-height:1.22!important}.nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}.nav a{min-height:28px!important;padding:5px 7px!important;font-size:.58rem!important;line-height:1.06!important}.wrap,.topbar{width:min(100% - 14px,1320px)!important}.hero{padding:20px!important}.hero-lead{text-align:left!important;max-width:none!important}.hero-kicker{font-size:.68rem!important}.detail-card p,.detail-card li,.gallery-head p{font-size:.95rem!important}}.fact-split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}.fact-col{display:grid;gap:12px}.fact-netto{text-align:center;font-weight:800;margin-top:6px}@media (max-width:820px){.fact-split{grid-template-columns:1fr!important;gap:12px!important}.fact-netto{text-align:center!important}}.record-split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:14px;align-items:start}.record-text{display:grid;gap:10px}.record-image{align-self:start}@media (max-width:820px){.record-split{grid-template-columns:1fr!important}}.scan-split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(180px,.8fr);gap:14px;align-items:start}.scan-text{display:grid;gap:10px}.scan-image{display:flex;justify-content:flex-end}@media (max-width:820px){.scan-split{grid-template-columns:1fr!important}.scan-image{justify-content:flex-start!important}.scan-image img{max-width:100%!important;margin-left:0!important}}</style>
+:root{
+  --bg:#edf1f5;
+  --surface:#ffffff;
+  --surface-soft:#f4f7f9;
+  --ink:#2d3748;
+  --ink-soft:#4a5568;
+  --muted:#718096;
+  --border:#e2e8f0;
+  --dark:#4a5568;
+  --dark-2:#323a45;
+  --radius:8px;
+  --shadow-card:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.05);
+  --shadow-hover:0 4px 14px rgba(0,0,0,.15);
+  --container:min(1200px,calc(100% - 32px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Manrope","Segoe UI",sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.6;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.topbar{
+  position:sticky;
+  top:12px;
+  z-index:50;
+  width:var(--container);
+  margin:16px auto 0;
+  display:flex;
+  align-items:stretch;
+  justify-content:space-between;
+  gap:16px;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);
+  padding:12px 16px;
+  backdrop-filter:blur(8px);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  flex:0 0 clamp(320px,34vw,430px);
+  padding:4px 0;
+}
+.brand-mark{display:none}
+.brand span:last-child{
+  font-weight:700;
+  font-size:clamp(1rem,1.4vw,1.45rem);
+  line-height:1.2;
+  color:var(--ink-soft);
+  letter-spacing:.01em;
+  text-align:center;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  flex:1;
+}
+.nav a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:7px 10px;
+  min-height:42px;
+  background:#fff;
+  transition:.2s ease;
+}
+.nav a:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+
+.wrap{width:var(--container);margin:0 auto;padding:28px 0 80px}
+main{display:grid;gap:88px}
+
+section{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);
+  padding:40px;
+}
+
+.hero{
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  align-items:center;
+  gap:28px;
+  background:linear-gradient(180deg,#ffffff 0%,#f9fbfd 100%);
+}
+.hero-left{
+  display:grid;
+  gap:14px;
+  align-items:start;
+}
+.hero-kicker{
+  display:inline-block;
+  font-size:.74rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0;
+}
+.hero-media{
+  width:100%;
+  max-width:100%;
+  height:auto;
+  border-radius:8px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-card);
+  margin:0;
+}
+.hero-right{display:grid;align-items:center}
+.hero-lead{
+  margin:0;
+  font-weight:800;
+  font-size:clamp(2rem,4.5vw,3.35rem);
+  line-height:1.04;
+  letter-spacing:-.02em;
+}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+.section-kicker{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-weight:700;
+  background:#fff;
+}
+.section-head h2{
+  margin:0;
+  font-size:clamp(1.7rem,3vw,2.2rem);
+  line-height:1.1;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+
+.content-section>p{margin:0 0 14px;color:var(--ink-soft)}
+.content-section>ul{margin:0;padding-left:18px;color:var(--ink-soft);display:grid;gap:8px}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.detail-card{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:#fff;
+  box-shadow:var(--shadow-card);
+  padding:22px;
+  display:grid;
+  gap:12px;
+}
+.detail-card h3,.detail-card h4{margin:0}
+.detail-card h3{font-size:1.1rem;font-weight:700}
+.detail-card h4{font-size:.92rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.detail-card p{margin:0;color:var(--ink-soft)}
+.detail-card ul{margin:0;padding-left:18px;color:var(--ink-soft);display:grid;gap:8px}
+.detail-card--wide{grid-column:1 / -1}
+.detail-card--title{
+  text-align:center;
+  background:var(--surface-soft);
+}
+
+#section-2{
+  background:linear-gradient(180deg,var(--dark) 0%,var(--dark-2) 100%);
+  color:#fff;
+  border-color:rgba(255,255,255,.08);
+}
+#section-2 .section-head h2,
+#section-2 p,
+#section-2 li{color:#eef2f6}
+#section-2 .detail-card{
+  background:#fff;
+  color:var(--ink);
+}
+#section-2 .detail-card p,
+#section-2 .detail-card li,
+#section-2 .detail-card h4{color:var(--ink-soft)}
+
+.gallery-block{
+  background:var(--surface-soft);
+}
+.gallery-head h2{margin:0 0 10px;font-size:clamp(1.7rem,3vw,2.2rem)}
+.gallery-head p{margin:0;color:var(--ink-soft)}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.gallery-card{
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#fff;
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.gallery-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.gallery-image{aspect-ratio:16/10;object-fit:cover;background:#dde4ec}
+.gallery-label{display:block;padding:12px 13px;font-weight:600;color:var(--ink-soft)}
+
+.lightbox{position:fixed;inset:0;display:none;place-items:center;background:rgba(30,35,43,.75);z-index:120;padding:24px}
+.lightbox.is-open{display:grid}
+.lightbox-frame{width:min(95vw,1200px);display:grid;gap:12px;position:relative}
+.lightbox-image{max-height:78vh;border-radius:8px;margin:0 auto;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.lightbox-meta{text-align:center;color:#fff}
+.lightbox-close,.lightbox-control{position:absolute;width:44px;height:44px;border:0;border-radius:999px;background:#fff;cursor:pointer}
+.lightbox-close{top:8px;right:8px}
+.lightbox-control{top:50%;transform:translateY(-50%)}
+.lightbox-control.prev{left:8px}
+.lightbox-control.next{right:8px}
+
+.fact-split,
+.record-split,
+.scan-split{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.fact-col,.record-text,.scan-text{display:grid;gap:10px}
+.fact-netto{text-align:center;font-weight:800;color:var(--ink)}
+.record-image img,.scan-image img{width:100%;height:auto;border-radius:8px}
+
+@media (max-width:1100px){
+  .nav{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .detail-grid,.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:820px){
+  .topbar{position:static;grid-template-columns:1fr}
+  .brand{
+    flex-basis:auto;
+  }
+  .nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero{grid-template-columns:1fr}
+  .hero-media{max-width:100%}
+  section{padding:26px}
+  main{gap:64px}
+  .detail-grid,.gallery-grid,.fact-split,.record-split,.scan-split{grid-template-columns:1fr}
+  .record-image img,.scan-image img{max-width:100%;margin-left:0}
+}
+@media (max-width:560px){
+  .nav{grid-template-columns:1fr}
+  .wrap,.topbar{width:min(100% - 14px,1200px)}
+  section{padding:20px}
+  .hero-lead{font-size:clamp(1.55rem,8vw,2.2rem)}
+}
+</style>
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="#top"><img src="images/image11.png" alt="Telegram Bot cover" class="brand-image"><span class="brand-mark"></span><span>Telegram-бот для автоматизации учета производства</span></a>
+  <a class="brand" href="#top"><span class="brand-mark"></span><span>Telegram-бот для автоматизации<br>учета производства</span></a>
   <nav class="nav"><a href="#section-1">Проблема</a><a href="#section-2">Решение</a><a href="#section-3">Архитектура</a><a href="#section-4">Процесс работы</a><a href="#section-5">Бизнес-логика системы</a><a href="#section-6">Технологии и надежность</a><a href="#section-7">Развертывание и работа 24/7</a><a href="#section-8">Результаты внедрения</a><a href="#section-9">Экономический эффект</a><a href="#section-10">Итоговое ценностное предложение</a></nav>
 </header>
 <div class="wrap" id="top">
   <main>
     <section class="hero">
-      <span class="hero-kicker">Telegram Bot</span>
-      <p class="hero-lead">Переход от ручного учета к цифровому управлению процессом</p>
+      <div class="hero-left">
+        <span class="hero-kicker">Telegram Bot</span>
+        <img src="images/image11.png?v=2" alt="Telegram Bot cover" class="hero-media">
+      </div>
+      <div class="hero-right">
+        <p class="hero-lead">Переход от ручного учета к цифровому управлению процессом</p>
+      </div>
     </section>
     <section id="section-1" class="content-section"><div class="section-head"><span class="section-kicker">1</span><h2>Проблемы</h2></div><article class="detail-card detail-card--wide"><h3>Бумажный учет</h3><p>Во многих производственных компаниях учет продукции до сих пор построен на ручном вводе данных или на использовании разрозненных инструментов (Excel, бумажные записи, устные передачи информации).</p><p>Такая модель работы неизбежно приводит к системным потерям и снижению управляемости:</p><ul><li>ошибки операторов при вводе данных</li><li>расхождения по весу (брутто / нетто)</li><li>отсутствие прозрачности в режиме реального времени</li><li>задержки при обработке информации</li><li>невозможность оперативно проверить или восстановить операции</li><li>сложность анализа фактического выполнения заказов</li><li>отсутствие единого источника достоверных данных</li></ul><p>Дополнительно возникают скрытые риски:</p><ul><li>неконтролируемые корректировки</li><li>“ручные правки” без следа</li><li>дублирование записей</li><li>зависимость от конкретных сотрудников</li></ul><p>В результате бизнес теряет:</p><ul><li>деньги — за счет прямых потерь сырья</li><li>время — из-за медленных и ручных операций</li><li>управляемость — отсутствует точная картина происходящего</li></ul><h3>Точное нетто</h3><p>Одной из ключевых проблем при производстве пленки является невозможность получения точного веса <strong>нетто</strong> продукции. Основная причина — нестабильность веса тары.</p><p>В качестве тары используются картонные втулки, характеристики которых существенно варьируются:</p><ul><li>разная толщина картона</li><li>разная длина втулок</li><li>различная влажность материала</li></ul><p>Каждый из этих факторов напрямую влияет на вес тары. В результате, даже при наличии точного веса <strong>брутто</strong>, невозможно корректно определить вес <strong>нетто</strong>, что приводит к:</p><ul><li>искажению учета продукции</li><li>потерям сырья</li><li>ошибкам в отгрузке и расчетах</li></ul></article><article class="detail-card detail-card--wide"><h3>Принятое решение</h3><p>Для устранения данной проблемы был внедрен отдельный процесс точного учета веса тары:</p><ul><li><strong>Индивидуальное взвешивание тары</strong></li></ul><p>Каждая втулка проходит отдельное взвешивание до начала производства.</p><ul><li><strong>Фиксация веса в штрихкоде</strong></li></ul><p>Полученный точный вес тары записывается (зашивается) в штрихкод.</p><ul><li><strong>Интеграция с системой взвешивания</strong></li></ul><p>В процессе производства:</p><ul><li>сканируется штрихкод</li><li>система автоматически получает вес тары</li><li>производится взвешивание брутто</li><li><strong>Автоматический расчет нетто</strong></li></ul><p>Вес нетто определяется точно и автоматически:</p><p>Нетто = Брутто – Тара</p></article><article class="detail-card detail-card--wide"><h3>Результат внедрения</h3><p>Внедренное решение позволило:</p><ul><li>полностью устранить погрешности, связанные с нестабильностью тары</li><li>обеспечить <strong>точный учет веса нетто</strong> каждой единицы продукции</li><li>снизить потери сырья</li><li>исключить влияние человеческого фактора</li><li>повысить прозрачность и достоверность учета</li></ul></article><article class="detail-card detail-card--wide"><h3>Эффект для производства</h3><p>Данный подход формирует контролируемую и цифровую систему учета, в которой:</p><ul><li>каждая единица продукции имеет точные весовые параметры</li><li>данные фиксируются автоматически</li><li>исключаются системные потери</li></ul><p>В результате предприятие получает прямой экономический эффект за счет сокращения потерь и повышения точности учета сырьевой составляющей продукции.</p><p>👉 Даже 1–2% неучтенных потерь на объеме производства превращаются в десятки тысяч гривен ежемесячно.</p></article><div class="detail-grid"></div></section><section id="section-2" class="content-section"><div class="section-head"><span class="section-kicker">2</span><h2>Решение (готовый продукт)</h2></div><p>Мы предлагаем готовое решение — Telegram-бот для автоматизации учета продукции на производстве.</p><p>Это не просто бот, а полноценная система, которая объединяет в единый цифровой процесс:</p><ul><li>операторов ЛРП</li><li>сканирование штрихкодов</li><li>весовое оборудование (TCP-весы)</li><li>учетную систему (Google Sheets)</li><li>систему печати</li></ul><p>Система выстраивает непрерывный поток данных без ручного ввода:</p><p>👉 <strong>Сканирование → Взвешивание → Расчет → Учет → Печать → Контроль</strong></p><img src="images/image12.png?v=2" alt="Схема процесса: Сканирование - Взвешивание - Расчет - Учет - Печать - Контроль" style="width:100%;height:auto;display:block;border-radius:16px;margin:16px 0 18px;"><div class="detail-grid"><article class="detail-card detail-card--wide"><h3>Что делает система (по факту)</h3><div class="fact-split"><div class="fact-col"><p>Система полностью берет на себя операционный цикл:</p><ul><li>считывает код продукции (сканер / WebApp / вручную)</li><li>автоматически определяет номенклатуру (лист Tag)</li><li>запрашивает и распознает вес тары</li><li>получает вес брутто напрямую с подключенных TCP-весов</li><li>автоматически рассчитывает нетто:</li></ul></div><div class="fact-col"><ul><li>записывает данные в Google Sheets (Log-листы по ЛРП)</li><li>отправляет информацию в Telegram-группу (онлайн лог производства)</li><li>формирует PDF-документ</li><li>отправляет этикетку на печать</li><li>рассчитывает остаток заказа в реальном времени</li></ul><p>👉 Оператор выполняет только одно действие — сканирует.</p></div></div><p class="fact-netto">👉 <strong>Нетто = Брутто – Тара</strong></p></article><article class="detail-card detail-card--wide detail-card--title"><h3>Какие задачи решает система</h3></article><article class="detail-card"><h4>Устранение ручного ввода</h4><ul><li>нет ввода чисел вручную</li><li>нет ошибок оператора</li><li>нет необходимости в обучении сложным системам</li></ul><p>👉 Данные фиксируются автоматически.</p></article><article class="detail-card"><h4>Автоматический расчет веса</h4><ul><li>брутто приходит с весов</li><li>тара определяется через код</li><li>нетто рассчитывается системой</li></ul><p>👉 Полностью исключаются ошибки расчетов.</p></article><article class="detail-card"><h4>Полный онлайн-учет операций</h4><p>Каждая операция фиксируется автоматически:</p><ul><li>код / заказ</li><li>номенклатура</li><li>тара</li><li>брутто</li><li>нетто</li><li>дата и время</li><li>пользователь</li></ul><p>👉 Формируется полный цифровой журнал производства.</p></article><article class="detail-card"><h4>Контроль остатков в реальном времени</h4><p>Система автоматически рассчитывает:</p><p>👉 <strong>Остаток = Balance – net\_today</strong></p><p>С учетом:</p><ul><li>бизнес-дня (начало в 09:00)</li><li>фактического выпуска</li></ul><p>👉 Руководство видит реальное выполнение заказов.</p></article><article class="detail-card"><h4>Управление нумерацией продукции</h4><ul><li>отдельная нумерация:</li><li>годной продукции</li><li>брака</li><li>синхронизация с данными в таблице</li><li>восстановление после перезапуска</li></ul><p>👉 Исключаются дубли и потери учета.</p></article><article class="detail-card"><h4>Контроль брака и корректировок</h4><ul><li>удаление записи реализовано через статус <strong>Eror</strong></li><li>данные не удаляются физически</li><li>возможно восстановление записи</li><li>брак учитывается отдельно (Trash)</li></ul><p>👉 Полная прозрачность всех изменений.</p></article><article class="detail-card"><h4>Автоматическая печать</h4><ul><li>формирование PDF из шаблона (лист Print)</li><li>отправка на принтер через Foxit</li><li>подтверждение пользователю</li></ul><p>👉 Исключаются ошибки маркировки.</p></article><article class="detail-card"><h4>Онлайн-мониторинг</h4><ul><li>отправка всех операций в Telegram-группу</li><li>контроль в реальном времени</li></ul><p>👉 Руководство видит все операции “здесь и сейчас”.</p></article><article class="detail-card"><h4>Тестовый режим</h4><p>Команда: <strong>/test</strong></p><ul><li>отключает оборудование</li><li>позволяет вводить данные вручную</li><li>помечает записи как тестовые (Eror)</li></ul><p>👉 Удобно для внедрения и обучения.</p></article></div></section>
     <section class="gallery-block" id="gallery">
@@ -44,7 +304,7 @@ a{color:inherit}img{display:block;max-width:100%}button{font:inherit}.topbar{pos
       </div>
       <div class="gallery-grid"><button class="gallery-card" type="button" data-index="0"><img class="gallery-image" src="images/image1.png?v=2" alt="База данных номенклатуры" data-label="База данных номенклатуры"><span class="gallery-label">База данных номенклатуры</span></button><button class="gallery-card" type="button" data-index="1"><img class="gallery-image" src="images/image2.png?v=2" alt="Лог взвешиваний" data-label="Лог взвешиваний"><span class="gallery-label">Лог взвешиваний</span></button><button class="gallery-card" type="button" data-index="2"><img class="gallery-image" src="images/image3.jpg" alt="Список оборудования" data-label="Список оборудования"><span class="gallery-label">Список оборудования</span></button><button class="gallery-card" type="button" data-index="3"><img class="gallery-image" src="images/image4.jpg" alt="Поиск данных о заказе" data-label="Поиск данных о заказе"><span class="gallery-label">Поиск данных о заказе</span></button><button class="gallery-card" type="button" data-index="4"><img class="gallery-image" src="images/image5.jpg" alt="Окно сканера" data-label="Окно сканера"><span class="gallery-label">Окно сканера</span></button><button class="gallery-card" type="button" data-index="5"><img class="gallery-image" src="images/image6.jpg" alt="Идентификация заказа" data-label="Идентификация заказа"><span class="gallery-label">Идентификация заказа</span></button><button class="gallery-card" type="button" data-index="6"><img class="gallery-image" src="images/image7.jpg" alt="Взвешивание" data-label="Взвешивание"><span class="gallery-label">Взвешивание</span></button><button class="gallery-card" type="button" data-index="7"><img class="gallery-image" src="images/image8.png" alt="Этикетка" data-label="Этикетка"><span class="gallery-label">Этикетка</span></button><button class="gallery-card" type="button" data-index="8"><img class="gallery-image" src="images/image9.jpg" alt="Оповещение записи" data-label="Оповещение записи"><span class="gallery-label">Оповещение записи</span></button><button class="gallery-card" type="button" data-index="9"><img class="gallery-image" src="images/image10.jpg?v=2" alt="Команды" data-label="Команды"><span class="gallery-label">Команды</span></button></div>
     </section>
-    <section id="section-3" class="content-section"><div class="section-head"><span class="section-kicker">3</span><h2>Архитектура (как это работает внутри)</h2></div><p>Система построена как единый цифровой контур:</p><p><strong>Сканер → Бот → Весы → Google Sheets → PDF → Принтер</strong></p><div class="detail-grid"><article class="detail-card"><h3>Компоненты решения</h3><ul><li>Telegram-бот (интерфейс для операторов)</li><li>сканеры (COM / WebApp)</li><li>TCP-весы (получение веса)</li><li>Google Sheets (облачная база данных)</li><li>модуль печати PDF</li><li>система логирования и отчетов</li></ul><p>👉 Все данные проходят единый поток без ручного вмешательства.</p></article></div></section><section id="section-4" class="content-section"><div class="section-head"><span class="section-kicker">4</span><h2>Процесс работы (реальный сценарий)</h2></div><div class="detail-grid"><article class="detail-card"><h3>Сканирование продукции</h3><div class="scan-split"><div class="scan-text"><p>Оператор:</p><ul><li>сканирует код (без Enter)</li><li>или использует WebApp</li><li>или вводит вручную</li></ul><p>Система:</p><ul><li>сохраняет код</li><li>ищет номенклатуру в листе Tag</li></ul></div><div class="scan-image"><img src="images/image17.jpg?v=1" alt="Scan" style="width:100%;max-width:220px;height:auto;display:block;border-radius:12px;margin-left:auto;"></div></div></article><article class="detail-card"><h3>Ввод тары</h3><ul><li>бот сообщает найденную номенклатуру</li><li>запрашивает вес тары</li><li>тара считывается через штрихкод</li></ul><img src="images/image13.png?v=1" alt="Ввод тары" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"></article><article class="detail-card"><h3>Получение веса</h3><ul><li>запускается триггер получения веса</li><li>бот получает брутто с весов</li><li>проверяет корректность значения</li></ul><img src="images/image18.png?v=1" alt="Получение веса" style="width:100%;max-width:75%;height:auto;display:block;border-radius:12px;margin:10px auto 0;"></article><article class="detail-card"><h3>Запись</h3><div class="record-split"><div class="record-text"><p>Данные записываются в Log-лист:</p><ul><li>заказ</li><li>брутто</li><li>тара</li><li>нетто</li><li>дата/время</li><li>пользователь</li></ul><p>Также:</p><ul><li>отправка в Telegram-группу</li></ul></div><div class="record-image"><img src="images/image16.png?v=2" alt="Запись" style="width:100%;height:auto;display:block;border-radius:12px;"></div></div></article><article class="detail-card"><h3>Печать</h3><ul><li>формируется PDF</li><li>отправляется на принтер</li></ul><img src="images/image14.webp?v=1" alt="Печать" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"><p>👉 «Бирка отправлена на печать»</p></article><article class="detail-card"><h3>Подтверждение</h3><p>Пользователь получает:</p><p><strong>«Данные записаны»</strong> с детализацией операции</p><img src="images/image15.png?v=2" alt="Подтверждение" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"></article><article class="detail-card"><h3>Цикл</h3><p>Система сразу готова к следующей операции.</p><p>👉 Непрерывная работа без остановок.</p></article></div></section><section id="section-5" class="content-section"><div class="section-head"><span class="section-kicker">5</span><h2>Бизнес-логика системы</h2></div><p>Система полностью адаптирована под реальные процессы производства:</p><ul><li>бизнес-день начинается с <strong>09:00</strong></li><li>расчет остатков ведется по бизнес-дате</li><li>в расчетах исключаются:</li><li>Eror (удаленные записи)</li><li>Trash (брак)</li></ul><div class="detail-grid"><article class="detail-card"><h3>Особенности учета</h3><ul><li>отдельная нумерация:</li><li>годной продукции</li><li>брака</li><li>корректная синхронизация после удаления/восстановления</li><li>восстановление состояния после перезапуска</li></ul><p>👉 Система соответствует реальной логике производства.</p></article></div></section><section id="section-6" class="content-section"><div class="section-head"><span class="section-kicker">6</span><h2>Технологии и надежность</h2></div><p>Решение построено на:</p><ul><li>Python</li><li>Telegram Bot API</li><li>Google Sheets API (gspread)</li><li>TCP / COM интеграции</li><li>WebApp-сканер</li></ul><div class="detail-grid"><article class="detail-card"><h3>Реализовано для стабильности</h3><ul><li>защита от дублей операций</li><li>retry при сетевых ошибках</li><li>таймауты зависших процессов</li><li>буферизация запросов</li><li>логирование с ротацией</li><li>устойчивость к сбоям</li></ul><p>👉 Система рассчитана на постоянную эксплуатацию.</p></article></div></section><section id="section-7" class="content-section"><div class="section-head"><span class="section-kicker">7</span><h2>Развертывание и работа 24/7</h2></div><p>Система внедряется как промышленное решение:</p><ul><li>запуск на сервере (VPS или локальный ПК)</li><li>работа как служба (NSSM)</li><li>автоматический старт</li><li>круглосуточная работа</li></ul><div class="detail-grid"><article class="detail-card"><h3>Подключение</h3><ul><li>весы (TCP/IP)</li><li>сканеры</li><li>Google API</li><li>принтер</li></ul></article><article class="detail-card"><h3>Результат</h3><ul><li>стабильная работа 24/7</li><li>независимость от пользователя</li><li>доступ из любой точки</li></ul><p>👉 Это полноценная система, а не временное решение.</p></article></div></section><section id="section-8" class="content-section"><div class="section-head"><span class="section-kicker">8</span><h2>Результаты внедрения</h2></div><p>После внедрения:</p><ul><li>снижение ошибок учета до <strong>90–95%</strong></li><li>ускорение операций до <strong>30–40%</strong></li><li>полный контроль производства</li><li>прозрачность данных</li><li>снижение зависимости от персонала</li></ul><p>👉 Руководство получает точные данные в реальном времени.</p><div class="detail-grid"></div></section><section id="section-9" class="content-section"><div class="section-head"><span class="section-kicker">9</span><h2>Экономический эффект</h2></div><p>Пример:</p><ul><li>объем: 70 тонн / месяц</li><li>снижение потерь: 1%</li><li>экономия: 700 кг</li></ul><p>При стоимости: 👉 100 грн/кг = <strong>70 000 грн / месяц</strong></p><div class="detail-grid"><article class="detail-card"><h3>Дополнительная выгода</h3><ul><li>снижение брака</li><li>сокращение трудозатрат</li><li>ускорение отгрузки</li><li>снижение операционных рисков</li></ul></article></div></section><section id="section-10" class="content-section"><div class="section-head"><span class="section-kicker">10</span><h2>Итоговое ценностное предложение</h2></div><p>👉 Вы получаете не просто учет, а инструмент управления производством:</p><ul><li>контроль каждой операции</li><li>прозрачность всех данных</li><li>автоматизацию процессов</li><li>снижение потерь</li></ul><div class="detail-grid"><article class="detail-card"><h3>Результат внедрения:</h3><p>📈 рост эффективности 💰 прямая экономия ⚙️ управляемое производство</p></article></div></section>
+    <section id="section-3" class="content-section"><div class="section-head"><span class="section-kicker">3</span><h2>Архитектура (как это работает внутри)</h2></div><p>Система построена как единый цифровой контур:</p><p><strong>Сканер → Бот → Весы → Google Sheets → PDF → Принтер</strong></p><div class="detail-grid"><article class="detail-card"><h3>Компоненты решения</h3><ul><li>Telegram-бот (интерфейс для операторов)</li><li>сканеры (COM / WebApp)</li><li>TCP-весы (получение веса)</li><li>Google Sheets (облачная база данных)</li><li>модуль печати PDF</li><li>система логирования и отчетов</li></ul><p>👉 Все данные проходят единый поток без ручного вмешательства.</p></article></div></section><section id="section-4" class="content-section"><div class="section-head"><span class="section-kicker">4</span><h2>Процесс работы (реальный сценарий)</h2></div><div class="detail-grid"><article class="detail-card"><h3>Сканирование продукции</h3><div class="scan-split"><div class="scan-text"><p>Оператор:</p><ul><li>сканирует код (без Enter)</li><li>или использует WebApp</li><li>или вводит вручную</li></ul><p>Система:</p><ul><li>сохраняет код</li><li>ищет номенклатуру в листе Tag</li></ul></div><div class="scan-image"><img src="images/image17.jpg?v=1" alt="Scan" style="width:100%;max-width:220px;height:auto;display:block;border-radius:12px;margin-left:auto;"></div></div></article><article class="detail-card"><h3>Ввод тары</h3><ul><li>бот сообщает найденную номенклатуру</li><li>запрашивает вес тары</li><li>тара считывается через штрихкод</li></ul><img src="images/image13.png?v=1" alt="Ввод тары" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"></article><article class="detail-card"><h3>Получение веса</h3><ul><li>запускается триггер получения веса</li><li>бот получает брутто с весов</li><li>проверяет корректность значения</li></ul><img src="images/image18.png?v=1" alt="Получение веса" style="width:100%;max-width:75%;height:auto;display:block;border-radius:12px;margin:10px auto 0;"></article><article class="detail-card"><h3>Запись</h3><div class="record-split"><div class="record-text"><p>Данные записываются в Log-лист:</p><ul><li>заказ</li><li>брутто</li><li>тара</li><li>нетто</li><li>дата/время</li><li>пользователь</li></ul><p>Также:</p><ul><li>отправка в Telegram-группу</li></ul></div><div class="record-image"><img src="images/image16.png?v=2" alt="Запись" style="width:100%;height:auto;display:block;border-radius:12px;"></div></div></article><article class="detail-card"><h3>Печать</h3><ul><li>формируется PDF</li><li>отправляется на принтер</li></ul><img src="images/image14.webp?v=1" alt="Печать" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"><p>👉 «Бирка отправлена на печать»</p></article><article class="detail-card"><h3>Подтверждение</h3><p>Пользователь получает:</p><p><strong>«Данные записаны»</strong> с детализацией операции</p><img src="images/image15.png?v=2" alt="Подтверждение" style="width:100%;height:auto;display:block;border-radius:12px;margin-top:10px;"></article><article class="detail-card"><h3>Цикл</h3><p>Система сразу готова к следующей операции.</p><p>👉 Непрерывная работа без остановок.</p></article></div></section><section id="section-5" class="content-section"><div class="section-head"><span class="section-kicker">5</span><h2>Бизнес-логика системы</h2></div><p>Система полностью адаптирована под реальные процессы производства:</p><ul><li>бизнес-день начинается с <strong>09:00</strong></li><li>расчет остатков ведется по бизнес-дате</li><li>в расчетах исключаются:</li><li>Eror (удаленные записи)</li><li>Trash (брак)</li></ul><div class="detail-grid"><article class="detail-card"><h3>Особенности учета</h3><ul><li>отдельная нумерация:</li><li>годной продукции</li><li>брака</li><li>корректная синхронизация после удаления/восстановления</li><li>восстановление состояния после перезапуска</li></ul><p>👉 Система соответствует реальной логике производства.</p></article></div></section><section id="section-6" class="content-section"><div class="section-head"><span class="section-kicker">6</span><h2>Технологии и надежность</h2></div><p>Решение построено на:</p><ul><li>Python</li><li>Telegram Bot API</li><li>Google Sheets API (gspread)</li><li>TCP / COM интеграции</li><li>WebApp-сканер</li></ul><div class="detail-grid"><article class="detail-card"><h3>Реализовано для стабильности</h3><ul><li>защита от дублей операций</li><li>retry при сетевых ошибках</li><li>таймауты зависших процессов</li><li>буферизация запросов</li><li>логирование с ротацией</li><li>устойчивость к сбоям</li></ul><p>👉 Система рассчитана на постоянную эксплуатацию.</p></article></div></section><section id="section-7" class="content-section"><div class="section-head"><span class="section-kicker">7</span><h2>Развертывание и работа 24/7</h2></div><p>Система внедряется как промышленное решение:</p><ul><li>запуск на сервере (VPS или локальный ПК)</li><li>работа как служба (NSSM)</li><li>автоматический старт</li><li>круглосуточная работа</li></ul><div class="detail-grid"><article class="detail-card"><h3>Подключение</h3><ul><li>весы (TCP/IP)</li><li>сканеры</li><li>Google API</li><li>принтер</li></ul></article><article class="detail-card"><h3>Результат</h3><ul><li>стабильная работа 24/7</li><li>независимость от пользователя</li><li>доступ из любой точки</li></ul><p>👉 Это полноценная система, а не временное решение.</p></article></div></section><section id="section-8" class="content-section"><div class="section-head"><span class="section-kicker">8</span><h2>Результаты внедрения</h2></div><p>После внедрения:</p><ul><li>снижение ошибок учета до <strong>90–95%</strong></li><li>ускорение операций до <strong>30–40%</strong></li><li>полный контроль производства</li><li>прозрачность данных</li><li>снижение зависимости от персонала</li></ul><p>👉 Руководство получает точные данные в реальном времени.</p><div class="detail-grid"></div></section><section id="section-9" class="content-section"><div class="section-head"><span class="section-kicker">9</span><h2>Экономический эффект</h2></div><p>Пример:</p><ul><li>объем: 100 тонн / месяц</li><li>снижение потерь: 1%</li><li>предотвращённые потери: 1000 кг</li></ul><p>При стоимости: 👉 100 грн/кг = <strong>экономия 100 000 грн / месяц</strong></p><div class="detail-grid"><article class="detail-card"><h3>Дополнительная выгода</h3><ul><li>снижение брака</li><li>сокращение трудозатрат</li><li>ускорение отгрузки</li><li>снижение операционных рисков</li></ul></article></div></section><section id="section-10" class="content-section"><div class="section-head"><span class="section-kicker">10</span><h2>Итоговое ценностное предложение</h2></div><p>👉 Вы получаете не просто учет, а инструмент управления производством:</p><ul><li>контроль каждой операции</li><li>прозрачность всех данных</li><li>автоматизацию процессов</li><li>снижение потерь</li></ul><div class="detail-grid"><article class="detail-card"><h3>Результат внедрения:</h3><p>📈 рост эффективности 💰 прямая экономия ⚙️ управляемое производство</p></article></div></section>
   </main>
 </div>
 <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -109,3 +369,5 @@ document.addEventListener('keydown', (event) => {
 </script>
 </body>
 </html>
+
+
